@@ -102,6 +102,8 @@ tag_closing(Tag) ->
 %% ATTRIBUTES
 %% -----------------------------------------------------------------------------
 
+attrs(#{'$plain$' := Plain} = Attrs) when is_binary(Plain) ->
+    [" ", Plain | attrs(maps:without(['$plain$'], Attrs))];
 attrs(Attrs) when is_map(Attrs) ->
 	[begin
 		Attr = case maps:get(A, Attrs) of
@@ -109,4 +111,4 @@ attrs(Attrs) when is_map(Attrs) ->
 			A2   -> A2
 		end,
 		[" ", atom_to_list(A), "=\"", Attr, "\""] 
-	end || A <- maps:keys(Attrs)].
+	end || A <- lists:sort(maps:keys(Attrs))].
